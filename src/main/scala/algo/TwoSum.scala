@@ -22,7 +22,7 @@ object Solution {
     var result = new Array[Int](2)
     for (i <- 0 to nums.length - 1) {
       val anotherIndex = numsMap.get(target - nums(i));
-      if (None != anotherIndex) result = Array(i, anotherIndex.get);
+      if (anotherIndex.isDefined) result = Array(i, anotherIndex.get);
       numsMap.put(nums(i), i)
     }
     result
