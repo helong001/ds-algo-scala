@@ -165,9 +165,37 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
     None
   }
 
+  /**
+   * 从指定结点反转链表方向到头结点
+   *
+   * @param node
+   * @return
+   */
   def inverseLink(node: Node): Node = {
+    require(headOpt.isDefined, "the linked list is empty")
+    var pre: Option[Node] = None
+    var next: Option[Node] = None
+    var current = headOpt
 
-    None.get
+    //current 考虑链表尾结点时，next为空
+    while (current.isDefined && !current.get.equals(node)) {
+      //结点方向反转
+      next = current.get.next
+      current.get.next = pre
+      //链表结点从头结点往尾结点方向移动
+      pre = current
+      current = next
+    }
+    //结点为指定结点时（即当前结点为新链表的头结点）方向反转
+    current.get.next = pre
+    current.get
   }
 
+  /**
+   * 判断链表中是否有环
+   * @return
+   */
+  def isPalindrome(): Boolean = {
+    false
+  }
 }
