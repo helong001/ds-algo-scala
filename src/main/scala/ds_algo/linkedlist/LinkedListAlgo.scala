@@ -100,4 +100,76 @@ object LinkedListAlgo {
     length
   }
 
+  /**
+   * 合并两个有序链表
+   *
+   * @param nodeA
+   * @param nodeB
+   * @return 合并后的链表头结点
+   */
+  def mergeSortedList(nodeA: Option[Node], nodeB: Option[Node]): Option[Node] = {
+    var preHead = new Node(-1, None)
+    var pre = preHead
+    var headA = nodeA
+    var headB = nodeB
+    while (headA.isDefined && headB.isDefined) {
+      if (headA.get.data <= headB.get.data) {
+        pre.next = headA
+        headA = headA.get.next
+      } else {
+        pre.next = headB
+        headB = headB.get.next
+      }
+    }
+    //必然会先遍历完其中一个链表（二选一），余下的链表合并到尾部
+    if (headA.isDefined) {
+      pre.next = headA
+    } else {
+      pre.next = headB
+    }
+    preHead.next
+  }
+
+  /**
+   * 删除链表倒数第 k个结点
+   *
+   * @param headOpt
+   * @param k
+   * @return 新链表的头结点
+   */
+  def deleteLastKthNode(headOpt: Option[Node], k: Int): Option[Node] = {
+    require(k > 0, "K must be greater than 0")
+    headOpt match {
+      case None => None
+      case Some(head) =>
+        var preHead = Option(new Node(-1, None))
+        preHead.get.next = headOpt
+
+        var fast = preHead
+        var slow = preHead
+        //让快结点先于慢结点 k步
+        for (i <- 0 until k + 1) {
+          fast = fast.get.next
+        }
+
+        while (fast.isDefined) {
+          fast = fast.get.next
+          slow = slow.get.next
+        }
+        //删除第K个结点
+        slow.get.next = slow.get.next.get.next
+        preHead.get.next
+    }
+  }
+
+  def mkStringForChain(node: Node): String = {
+    val result = new StringBuilder
+    var p = node
+    while (p.next.isDefined) {
+      result.append(p.data)
+      p = p.next.get
+    }
+    result.append(p.data)
+    result.mkString
+  }
 }

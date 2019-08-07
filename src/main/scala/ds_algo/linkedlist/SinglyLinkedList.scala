@@ -193,6 +193,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
 
   /**
    * 判断链表中是否有环
+   *
    * @return
    */
   def isPalindrome(): Boolean = {
