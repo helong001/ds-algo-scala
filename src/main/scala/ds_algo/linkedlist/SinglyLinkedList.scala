@@ -1,5 +1,7 @@
 package ds_algo.linkedlist
 
+import scala.util.control.Breaks._
+
 /**
  * the model class for the linked list
  *
@@ -16,21 +18,6 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   def insertHead(value: Int): Unit = {
     val newNode = new Node(value, None)
     insertHead(newNode)
-  }
-
-  /**
-   * 将新结点插入到头部
-   *
-   * @param newNode
-   */
-  def insertHead(newNode: Node): Unit = {
-    headOpt match {
-      case None =>
-        headOpt = Some(newNode)
-      case Some(head) =>
-        newNode.next = Some(head)
-        headOpt = Some(newNode)
-    }
   }
 
   def insertTail(value: Int): Unit = {
@@ -121,6 +108,21 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   }
 
   /**
+   * 将新结点插入到头部
+   *
+   * @param newNode
+   */
+  def insertHead(newNode: Node): Unit = {
+    headOpt match {
+      case None =>
+        headOpt = Some(newNode)
+      case Some(head) =>
+        newNode.next = Some(head)
+        headOpt = Some(newNode)
+    }
+  }
+
+  /**
    * 删除已知结点
    * 需要校验链表中是否有环
    *
@@ -192,11 +194,86 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   }
 
   /**
-   * 判断链表中是否有环
+   * 判断是否为回文链表
    *
    * @return
    */
   def isPalindrome(): Boolean = {
+    headOpt match {
+      case None => false
+      case Some(head) =>
+        var pre: Option[Node] = None
+        var next: Option[Node] = None
+        var slow = head
+        var fast = head
+
+        if (slow.next.isEmpty) {
+          return true
+        }
+
+        while (fast.next.isDefined && fast.next.get.next.isDefined) {
+          //反转链表方向
+          next = slow.next
+          slow.next = pre
+
+          //移动慢结点到下一个结点
+          pre = Some(slow)
+          slow = next.get
+
+          fast = fast.next.get.next.get
+        }
+
+        var leftLink: Option[Node] = None
+        var rightLink: Option[Node] = None
+
+        fast.next match {
+          case None => //odd
+            rightLink = slow.next
+            leftLink = pre
+          case Some(_) => //even
+            rightLink = slow.next
+            leftLink = Some(slow)
+        }
+    }
+
     false
   }
+
+  /**
+   * 比较左右两个链表是否相等
+   *
+   * @param leftLink  左链表
+   * @param rightLink 右链表
+   * @return true-相等；false-不相等
+   */
+  def compareLinkedNodes(leftLink: Option[Node], rightLink: Option[Node]): Boolean = {
+    var left = leftLink
+    var right = rightLink
+
+    breakable {
+      while (left.isDefined && right.isDefined) {
+        if (!left.get.data.equals(right.get.data)) {
+          break()
+        }
+        left = left.get.next
+        right = right.get.next
+      }
+    }
+    left.isEmpty && right.isEmpty
+  }
+
+  def mkString(): String = {
+    headOpt.map(head => {
+      var node = head
+      var result = new StringBuilder
+
+      while (node.next.isDefined) {
+        result.append(node.data)
+        node = node.next.get
+      }
+      result.append(node.data)
+      result.mkString
+    }).getOrElse("")
+  }
+
 }
