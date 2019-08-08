@@ -15,9 +15,9 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   // define constructor without param
   def this() = this(None)
 
-  def insertHead(value: Int): Unit = {
+  def insertToHead(value: Int): Unit = {
     val newNode = new Node(value, None)
-    insertHead(newNode)
+    insertToHead(newNode)
   }
 
   def insertTail(value: Int): Unit = {
@@ -90,7 +90,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
       case Some(head) =>
         //如果已知结点为头结点
         if (existNode.equals(head)) {
-          insertHead(newNode)
+          insertToHead(newNode)
         }
 
         var preNode = head
@@ -112,7 +112,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
    *
    * @param newNode
    */
-  def insertHead(newNode: Node): Unit = {
+  def insertToHead(newNode: Node): Unit = {
     headOpt match {
       case None =>
         headOpt = Some(newNode)
@@ -212,6 +212,8 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
         }
 
         while (fast.next.isDefined && fast.next.get.next.isDefined) {
+          fast = fast.next.get.next.get
+
           //反转链表方向
           next = slow.next
           slow.next = pre
@@ -219,24 +221,23 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
           //移动慢结点到下一个结点
           pre = Some(slow)
           slow = next.get
-
-          fast = fast.next.get.next.get
         }
 
         var leftLink: Option[Node] = None
         var rightLink: Option[Node] = None
+        //对齐比较的结点
+        rightLink = slow.next
+        //最后反转中点的方向
+        slow.next = pre
 
         fast.next match {
           case None => //odd
-            rightLink = slow.next
             leftLink = pre
           case Some(_) => //even
-            rightLink = slow.next
             leftLink = Some(slow)
         }
+        compareLinkedNodes(leftLink, rightLink)
     }
-
-    false
   }
 
   /**
