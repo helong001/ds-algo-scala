@@ -130,7 +130,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
    */
   def deleteByNode(node: Node): Unit = {
     //结点为头部时，无前结点，直接赋值为下一个结点
-    if (headOpt.equals(node)) {
+    if (headOpt.get.equals(node)) {
       headOpt = node.next
     } else {
       var preNode = headOpt.get
@@ -156,9 +156,9 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
     var node = headOpt
     while (true) {
       node match {
-        case Some(node) =>
+        case Some(_) =>
           //找到值value的结点就返回结点
-          if (node.data.equals(value)) return Some(node)
+          if (node.get.data.equals(value)) return node
         //如果没有找到值就返回Node
         case None => return None
       }
