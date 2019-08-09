@@ -7,9 +7,9 @@ package ds_algo.stack
  * @param backStack      后退栈
  * @param forwardStack   前进栈
  */
-class BrowserDemo(var currentPageOpt: Option[String], val backStack: StackDemo[String],
-                  val forwardStack: StackDemo[String]) {
-  def this() = this(None, new StackDemo[String], new StackDemo[String])
+class BrowserDemo(var currentPageOpt: Option[String], val backStack: StackBaseLinkedList[String],
+                  val forwardStack: StackBaseLinkedList[String]) {
+  def this() = this(None, new StackBaseLinkedList[String], new StackBaseLinkedList[String])
 
   /**
    * 打开新的网页

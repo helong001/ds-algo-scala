@@ -2,7 +2,7 @@ package ds_algo.stack
 
 sealed class Node[T](var data: T, var next: Option[Node[T]])
 
-class StackDemo[T] {
+class StackBaseLinkedList[T] {
   var headOpt: Option[Node[T]] = None
   var size = 0
 
