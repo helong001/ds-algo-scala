@@ -50,7 +50,7 @@ object LinkedListAlgo {
       val length = calculateCircleLength(node)
       var fast = head
       var slow = head
-      //结点比一个结点多走环长的步数然后开始同步后移，再次相遇的结点就是环的入口
+      //快结点比慢结点多走环长的步数然后开始同步后移，再次相遇的结点就是环的入口
       for (i <- 0 until length) {
         fast = fast.next.get
       }
@@ -120,6 +120,7 @@ object LinkedListAlgo {
         pre.next = headB
         headB = headB.get.next
       }
+      pre = pre.next.get
     }
     //必然会先遍历完其中一个链表（二选一），余下的链表合并到尾部
     if (headA.isDefined) {
@@ -147,9 +148,14 @@ object LinkedListAlgo {
 
         var fast = preHead
         var slow = preHead
+
         //让快结点先于慢结点 k步
         for (i <- 0 until k + 1) {
-          fast = fast.get.next
+          if (fast.isEmpty) {
+            throw new IllegalArgumentException("given linked list should contains at least k elements")
+          } else {
+            fast = fast.get.next
+          }
         }
 
         while (fast.isDefined) {
