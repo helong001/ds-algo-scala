@@ -1,6 +1,8 @@
 package ds_algo.stack
 
-class StackBaseArray[T](capacity: Int) {
+import scala.reflect.ClassTag
+
+class ArrayStack[T: ClassTag](capacity: Int) {
   val items = new Array[T](capacity)
   var count = 0
 
