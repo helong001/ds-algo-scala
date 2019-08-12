@@ -50,7 +50,7 @@ class SortsTest extends FlatSpec with Matchers {
     timed("bubbleSort", Sorts.bubbleSort, array.clone())
     timed("insertionSort", Sorts.insertionSort, array.clone())
     timed("selectionSort", Sorts.selectionSort, array.clone())
-    //timed("mergeSort", MergeSort.mergeSort, array.clone())
+    timed("mergeSort", MergeSort.mergeSort, array.clone())
     //timed("quickSort", QuickSort.quickSort, array.clone())
     //timed("heapSort", Heap.heapSort, array.clone())
   }
