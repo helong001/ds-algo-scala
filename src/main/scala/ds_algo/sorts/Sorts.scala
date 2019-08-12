@@ -59,7 +59,7 @@ object Sorts {
     val length = items.length
     if (length <= 1) return items
     for (i <- 1 until length) {
-      var toBeComparedItem = items(i)
+      val toBeComparedItem = items(i)
       var j = i - 1
       breakable {
         while (j >= 0) {
@@ -89,8 +89,8 @@ object Sorts {
   def selectionSort(items: Array[Int]): Array[Int] = {
     val length = items.length
     for (i <- 0 until length) {
-      var indexOfMin = getIndexOfMin(items, i)
-      var toBeSwapped = items(i)
+      val indexOfMin = getIndexOfMin(items, i)
+      val toBeSwapped = items(i)
       items(i) = items(indexOfMin)
       items(indexOfMin) = toBeSwapped
     }
