@@ -26,34 +26,41 @@ object MergeSort {
     _merge(items, start, pivot, end)
   }
 
+  /**
+   * 利用哨兵简化合并操作 (整数的最大值放在前后部分末尾)
+   *
+   * @param items 待排序数组
+   * @param start 待排序起点
+   * @param pivot 待排序中点
+   * @param end   待排序终点
+   */
   private[this] def _merge(items: Array[Int], start: Int, pivot: Int, end: Int): Unit = {
-    //前半部分的起点索引
-    var i = start
-    //后半部分的起点索引
-    var j = pivot + 1
-    //升序数组的索引
-    var k = 0
 
-    var lengthOne = j - i
-    var lengthTwo = end - j + 1
+    val firstLength = pivot - start + 1
+    val secondLength = end - pivot
+    val firstPart = new Array[Int](firstLength + 1)
+    val secondPart = new Array[Int](secondLength + 1)
 
-    //用于合并升序后存储
-    val sortedArray = new Array[Int](end - start + 1)
+    for (i <- 0 until firstLength) {
+      firstPart(i) = items(start + i)
+    }
+    firstPart(firstLength) = Int.MaxValue
 
-    while (i <= pivot || j <= end) {
-      //<= 为了稳定排序，维持数据的前后顺序
-      if (items(i) <= items(j) && i <=lengthOne) {
-        sortedArray(k) = items(i)
+    for (i <- 0 until secondLength) {
+      secondPart(i) = items(pivot + i + 1)
+    }
+    secondPart(secondLength) = Int.MaxValue
+
+    var i = 0
+    var j = 0
+    for (k <- start to end) {
+      if (firstPart(i) <= secondPart(j)) {
+        items(k) = firstPart(i)
         i += 1
-      } else if (j <=lengthTwo) {
-        sortedArray(k) = items(j)
+      } else {
+        items(k) = secondPart(j)
         j += 1
       }
-      k += 1
-    }
-
-    for (n <- 0 to end - start) {
-      items(start + n) = sortedArray(n)
     }
   }
 }
