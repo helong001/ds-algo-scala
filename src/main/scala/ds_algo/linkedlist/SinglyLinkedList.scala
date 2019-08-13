@@ -1,5 +1,7 @@
 package ds_algo.linkedlist
 
+import scala.util.control.Breaks._
+
 /**
  * the model class for the linked list
  *
@@ -13,24 +15,9 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   // define constructor without param
   def this() = this(None)
 
-  def insertHead(value: Int): Unit = {
+  def insertToHead(value: Int): Unit = {
     val newNode = new Node(value, None)
-    insertHead(newNode)
-  }
-
-  /**
-   * 将新结点插入到头部
-   *
-   * @param newNode
-   */
-  def insertHead(newNode: Node): Unit = {
-    headOpt match {
-      case None =>
-        headOpt = Some(newNode)
-      case Some(head) =>
-        newNode.next = Some(head)
-        headOpt = Some(newNode)
-    }
+    insertToHead(newNode)
   }
 
   def insertTail(value: Int): Unit = {
@@ -103,7 +90,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
       case Some(head) =>
         //如果已知结点为头结点
         if (existNode.equals(head)) {
-          insertHead(newNode)
+          insertToHead(newNode)
         }
 
         var preNode = head
@@ -121,6 +108,21 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
   }
 
   /**
+   * 将新结点插入到头部
+   *
+   * @param newNode
+   */
+  def insertToHead(newNode: Node): Unit = {
+    headOpt match {
+      case None =>
+        headOpt = Some(newNode)
+      case Some(head) =>
+        newNode.next = Some(head)
+        headOpt = Some(newNode)
+    }
+  }
+
+  /**
    * 删除已知结点
    * 需要校验链表中是否有环
    *
@@ -128,7 +130,7 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
    */
   def deleteByNode(node: Node): Unit = {
     //结点为头部时，无前结点，直接赋值为下一个结点
-    if (headOpt.equals(node)) {
+    if (headOpt.get.equals(node)) {
       headOpt = node.next
     } else {
       var preNode = headOpt.get
@@ -154,9 +156,9 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
     var node = headOpt
     while (true) {
       node match {
-        case Some(node) =>
+        case Some(_) =>
           //找到值value的结点就返回结点
-          if (node.data.equals(value)) return Some(node)
+          if (node.get.data.equals(value)) return node
         //如果没有找到值就返回Node
         case None => return None
       }
@@ -165,9 +167,114 @@ class SinglyLinkedList(var headOpt: Option[Node]) {
     None
   }
 
+  /**
+   * 从指定结点反转链表方向到头结点
+   *
+   * @param node
+   * @return
+   */
   def inverseLink(node: Node): Node = {
+    require(headOpt.isDefined, "the linked list is empty")
+    var pre: Option[Node] = None
+    var next: Option[Node] = None
+    var current = headOpt
 
-    None.get
+    //current 考虑链表尾结点时，next为空
+    while (current.isDefined && !current.get.equals(node)) {
+      //结点方向反转
+      next = current.get.next
+      current.get.next = pre
+      //链表结点从头结点往尾结点方向移动
+      pre = current
+      current = next
+    }
+    //结点为指定结点时（即当前结点为新链表的头结点）方向反转
+    current.get.next = pre
+    current.get
+  }
+
+  /**
+   * 判断是否为回文链表
+   *
+   * @return
+   */
+  def isPalindrome(): Boolean = {
+    headOpt match {
+      case None => false
+      case Some(head) =>
+        var pre: Option[Node] = None
+        var next: Option[Node] = None
+        var slow = head
+        var fast = head
+
+        if (slow.next.isEmpty) {
+          return true
+        }
+
+        while (fast.next.isDefined && fast.next.get.next.isDefined) {
+          fast = fast.next.get.next.get
+
+          //反转链表方向
+          next = slow.next
+          slow.next = pre
+
+          //移动慢结点到下一个结点
+          pre = Some(slow)
+          slow = next.get
+        }
+
+        var leftLink: Option[Node] = None
+        var rightLink: Option[Node] = None
+        //对齐比较的结点
+        rightLink = slow.next
+        //最后反转中点的方向
+        slow.next = pre
+
+        fast.next match {
+          case None => //odd
+            leftLink = pre
+          case Some(_) => //even
+            leftLink = Some(slow)
+        }
+        compareLinkedNodes(leftLink, rightLink)
+    }
+  }
+
+  /**
+   * 比较左右两个链表是否相等
+   *
+   * @param leftLink  左链表
+   * @param rightLink 右链表
+   * @return true-相等；false-不相等
+   */
+  def compareLinkedNodes(leftLink: Option[Node], rightLink: Option[Node]): Boolean = {
+    var left = leftLink
+    var right = rightLink
+
+    breakable {
+      while (left.isDefined && right.isDefined) {
+        if (!left.get.data.equals(right.get.data)) {
+          break()
+        }
+        left = left.get.next
+        right = right.get.next
+      }
+    }
+    left.isEmpty && right.isEmpty
+  }
+
+  def mkString(): String = {
+    headOpt.map(head => {
+      var node = head
+      var result = new StringBuilder
+
+      while (node.next.isDefined) {
+        result.append(node.data)
+        node = node.next.get
+      }
+      result.append(node.data)
+      result.mkString
+    }).getOrElse("")
   }
 
 }

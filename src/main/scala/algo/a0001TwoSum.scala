@@ -1,7 +1,7 @@
 package algo
 
 /**
-  * Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+  * Given an ds_algo.array of integers, return indices of the two numbers such that they add up to a specific target.
   *
   * You may assume that each input would have exactly one solution, and you may not use the same element twice.
   *
@@ -16,7 +16,7 @@ package algo
 
 import scala.collection.mutable.HashMap
 
-object Solution {
+object TwoSum {
   def twoSum(nums: Array[Int], target: Int): Array[Int] = {
     val numsMap = new HashMap[Int, Int]();
     var result = new Array[Int](2)
