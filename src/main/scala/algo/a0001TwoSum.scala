@@ -20,6 +20,7 @@ object Solution {
   def twoSum(nums: Array[Int], target: Int): Array[Int] = {
     val numsMap = new HashMap[Int, Int]();
     var result = new Array[Int](2)
+
     for (i <- 0 to nums.length - 1) {
       val anotherIndex = numsMap.get(target - nums(i));
       if (anotherIndex.isDefined) result = Array(i, anotherIndex.get);
