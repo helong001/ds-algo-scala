@@ -108,7 +108,7 @@ object LinkedListAlgo {
    * @return 合并后的链表头结点
    */
   def mergeSortedList(nodeA: Option[Node], nodeB: Option[Node]): Option[Node] = {
-    var preHead = new Node(-1, None)
+    val preHead = new Node(-1, None)
     var pre = preHead
     var headA = nodeA
     var headB = nodeB
